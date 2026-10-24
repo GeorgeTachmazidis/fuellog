@@ -2259,8 +2259,7 @@ export default function FuelLog(){
         </div>
         <div style={{...CS({marginBottom:12}),fontSize:fz(12),color:T.mt,lineHeight:1.6}}>{t("💾 Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κάνε τακτικά αντίγραφο ασφαλείας από το κουμπί 💾 πάνω.")}</div>
 <button onClick={()=>{setShowAbout(false);setShowWelcome(true);}} style={{...chipStyle(false),marginBottom:18}}>{t("👋 Δες ξανά την υποδοχή")}</button>
-        <div style={{textAlign:"center",padding:"18px 0 20px",borderTop:`1px solid ${T.br}`}}
-           
+           <div style={{textAlign:"center",padding:"18px 0 20px",borderTop:`1px solid ${T.br}`}}>
           <div style={{fontSize:fz(13),color:T.mt,lineHeight:1.9,marginBottom:20,textAlign:"left"}}>{t("⛽ Γεμίσματα καυσίμου με αυτόματο υπολογισμό λίτρων")}<br/>{t("🛣️ Διόδια, Πομποδέκτης, Parking, Service, Ελαστικά & άλλα έξοδα")}<br/>{t("🧾 Κινήσεις: ενιαίο ιστορικό & ημερολόγιο")}<br/>{t("📊 Στατιστικά, γραφήματα & ανάλυση κατανάλωσης")}<br/>{t("🎉 Ανασκόπηση χρονιάς ανά όχημα")}<br/>{t("🅿️ Πού παρκάρισα (GPS)")}<br/>{t("🚗 Υποστήριξη πολλαπλών οχημάτων & 2 καυσίμων")}<br/>{t("⚡ Βενζινοκίνητα, diesel, υβριδικά, plug-in & ηλεκτρικά")}<br/>{t("½ Μερικά γεμίσματα με σωστό υπολογισμό κατανάλωσης")}<br/>{t("🔔 Υπενθυμίσεις ΚΤΕΟ, ασφάλειας, service, διπλώματος")}<br/>{t("💾 Εξαγωγή σε JSON, CSV, Excel, PDF")}<br/>{t("📥 Εισαγωγή από Fuelio και από οποιαδήποτε εφαρμογή με CSV")}<br/>{t("🔀 Συγχώνευση αντιγράφων & έλεγχος διπλοεγγραφών στην εισαγωγή")}<br/>
           </div>
           <div style={{borderTop:`1px solid ${T.br}`,paddingTop:16}}>
