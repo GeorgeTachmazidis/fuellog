@@ -781,7 +781,7 @@ function Welcome({T,col,lang,setLang,onDone}){
     ["🔀","Φέρε τα δεδομένα σου σε άλλη συσκευή με συγχώνευση"],
   ];
   const anim=(idx,css)=>i===idx?css:"none";
-  const chips=[["🛣️"],["🔧"],["💶"],["⚡"]];
+  const chips=[["🛣️"],["🔧"],["🅿️"],["⚡"]];
   const chipPos=[{top:6,left:2},{top:20,right:0},{bottom:20,left:0},{bottom:4,right:14}];
   return(
     <div style={{position:"fixed",inset:0,zIndex:500,display:"flex",flexDirection:"column",color:T.tx,fontFamily:"sans-serif",
@@ -806,13 +806,13 @@ function Welcome({T,col,lang,setLang,onDone}){
 
           {/* ── Slide 1 · Καλωσόρισμα ── */}
           <div aria-hidden={i!==0} style={{width:`${100/N}%`,overflowY:"auto",padding:"4px 24px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",boxSizing:"border-box"}}>
-            <div style={{position:"relative",width:230,height:230,marginBottom:18}}>
-              <svg viewBox="0 0 180 180" width="230" height="230" style={{filter:`drop-shadow(0 0 18px ${col}66)`}}>
+            <div style={{position:"relative",width:205,height:205,marginBottom:10}}>
+              <svg viewBox="0 0 180 180" width="205" height="205" style={{filter:`drop-shadow(0 0 10px ${col}66)`}}>
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={T.br} strokeWidth="12" strokeLinecap="round"/>
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={col} strokeWidth="12" strokeLinecap="round" pathLength="100"
                   style={{strokeDasharray:100,strokeDashoffset:i===0?28:100,animation:anim(0,"flSweep 1.6s .25s cubic-bezier(.3,.1,.2,1) both")}}/>
-                <text x="90" y="106" textAnchor="middle" dominantBaseline="central" fontSize="58" fontWeight="900" fill={col}>{CURSYM}</text>
-                <text x="90" y="132" textAnchor="middle" fontSize="11" fontWeight="bold" fill={T.mt} letterSpacing="1.5">FUELLOG</text>
+                svg x="46" y="34" width="88" height="88" viewBox="0 0 64 64"><LogoMark col={col} bg={T.bg}/></svg>
+                <text x="90" y="150" textAnchor="middle" fontSize="11" fontWeight="bold" fill={T.mt} letterSpacing="1.5">FUELLOG</text>
               </svg>
               {chips.map(([ic],k)=>(
                 <span key={k} style={{position:"absolute",...chipPos[k],width:40,height:40,borderRadius:"50%",background:T.sf,border:`1px solid ${T.br}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:`0 4px 14px ${col}33`,
@@ -884,15 +884,25 @@ function Welcome({T,col,lang,setLang,onDone}){
     </div>
   );
 }
-function Logo({col,size=30}){
-  const f=CURSYM.length>2?10:CURSYM.length>1?14:19;
+function LogoMark({col,bg}){
+  const badge=col==="#10b981"?"#3b82f6":"#10b981";
+  const f=CURSYM.length>2?8:CURSYM.length>1?11:17;
   return(
-    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" style={{flexShrink:0}}>
-      <path d="M 10.6 37.4 A 19 19 0 1 1 37.4 37.4" fill="none" stroke={col} strokeWidth="4.5" strokeLinecap="round"/>
-      <text x="24" y="24" textAnchor="middle" dominantBaseline="central" fontSize={f} fontWeight="900" fill={col} fontFamily="Arial,sans-serif">{CURSYM}</text>
-    </svg>
+    <g>
+      <path d="M42 20 H48 Q52 20 52 24 V40 Q52 44 55.5 44 Q59 44 59 40 V28 L55 22" fill="none" stroke={col} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+      <rect x="10" y="53" width="36" height="6" rx="3" fill={col}/>
+      <rect x="14" y="6" width="28" height="48" rx="5" fill={col}/>
+      <rect x="19" y="12" width="18" height="13" rx="2.5" fill="rgba(0,0,0,.35)"/>
+      <path d="M28 31 C28 31 21.5 38.5 21.5 42.5 A6.5 6.5 0 0 0 34.5 42.5 C34.5 38.5 28 31 28 31 Z" fill="rgba(255,255,255,.92)"/>
+      <circle cx="47" cy="47" r="14" fill={badge} stroke={bg} strokeWidth="3"/>
+      <text x="47" y="47.5" textAnchor="middle" dominantBaseline="central" fontSize={f} fontWeight="900" fill="#fff" fontFamily="Arial,sans-serif">{CURSYM}</text>
+    </g>
   );
 }
+function Logo({col,bg,size=32}){
+  return <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" style={{flexShrink:0}}><LogoMark col={col} bg={bg}/></svg>;
+}
+ 
 // ========== MAIN APP ==========
 export default function FuelLog(){
   const [dark,setDark]=useState(()=>readPrefs().dark);
@@ -1471,7 +1481,7 @@ export default function FuelLog(){
       {/* Header */}
       <header style={{flexWrap:"wrap",gap:6,padding:"10px 15px",background:T.sf,borderBottom:`1px solid ${T.br}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <Logo col={col} size={32}/>
+          <Logo col={col} bg={T.sf} size={34}/>
           <span style={{fontWeight:"bold",fontSize:fz(17)}}>Fuel<span style={{color:col}}>Log</span>
           <span style={{fontSize:fz(11),color:T.mt,fontWeight:"normal"}}>v{APP_VER}</span></span>
       
@@ -2245,7 +2255,7 @@ export default function FuelLog(){
         <div style={{...CS({marginBottom:12}),fontSize:fz(12),color:T.mt,lineHeight:1.6}}>{t("💾 Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κάνε τακτικά αντίγραφο ασφαλείας από το κουμπί 💾 πάνω.")}</div>
 <button onClick={()=>{setShowAbout(false);setShowWelcome(true);}} style={{...chipStyle(false),marginBottom:18}}>{t("👋 Δες ξανά την υποδοχή")}</button>
         <div style={{textAlign:"center",padding:"10px 0 20px"}}>
-          <div style={{fontSize:fz(48),marginBottom:8}}>⛽</div>
+          <div style={{display:"flex",justifyContent:"center",marginBottom:8}}><Logo col={col} bg={T.sf} size={72}/></div>
           <div style={{fontSize:fz(22),fontWeight:"bold",marginBottom:4}}>FuelLog</div>
           <div style={{fontSize:fz(14),color:col,marginBottom:20}}>v{APP_VER}</div>
           <div style={{fontSize:fz(13),color:T.mt,lineHeight:1.9,marginBottom:20,textAlign:"left"}}>{t("⛽ Γεμίσματα καυσίμου με αυτόματο υπολογισμό λίτρων")}<br/>{t("🛣️ Διόδια, Πομποδέκτης, Parking, Service, Ελαστικά & άλλα έξοδα")}<br/>{t("🧾 Κινήσεις: ενιαίο ιστορικό & ημερολόγιο")}<br/>{t("📊 Στατιστικά, γραφήματα & ανάλυση κατανάλωσης")}<br/>{t("🎉 Ανασκόπηση χρονιάς ανά όχημα")}<br/>{t("🅿️ Πού παρκάρισα (GPS)")}<br/>{t("🚗 Υποστήριξη πολλαπλών οχημάτων & 2 καυσίμων")}<br/>{t("⚡ Βενζινοκίνητα, diesel, υβριδικά, plug-in & ηλεκτρικά")}<br/>{t("½ Μερικά γεμίσματα με σωστό υπολογισμό κατανάλωσης")}<br/>{t("🔔 Υπενθυμίσεις ΚΤΕΟ, ασφάλειας, service, διπλώματος")}<br/>{t("💾 Εξαγωγή σε JSON, CSV, Excel, PDF")}<br/>{t("📥 Εισαγωγή από Fuelio και από οποιαδήποτε εφαρμογή με CSV")}<br/>{t("🔀 Συγχώνευση αντιγράφων & έλεγχος διπλοεγγραφών στην εισαγωγή")}<br/>
