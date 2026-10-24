@@ -811,7 +811,7 @@ function Welcome({T,col,lang,setLang,onDone}){
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={T.br} strokeWidth="12" strokeLinecap="round"/>
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={col} strokeWidth="12" strokeLinecap="round" pathLength="100"
                   style={{strokeDasharray:100,strokeDashoffset:i===0?28:100,animation:anim(0,"flSweep 1.6s .25s cubic-bezier(.3,.1,.2,1) both")}}/>
-                svg x="46" y="34" width="88" height="88" viewBox="0 0 64 64"><LogoMark col={col} bg={T.bg}/></svg>
+                <svg x="46" y="34" width="88" height="88" viewBox="0 0 64 64"><LogoMark col={col} bg={T.bg}/></svg>
                 <text x="90" y="150" textAnchor="middle" fontSize="11" fontWeight="bold" fill={T.mt} letterSpacing="1.5">FUELLOG</text>
               </svg>
               {chips.map(([ic],k)=>(
