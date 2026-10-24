@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 
 // ========== LANGUAGE & CURRENCY ==========
 let LANG="el",CURSYM="€";
-const APP_VER="2.20";
+const APP_VER="2.21";
 const LANG_DICTS={};            // LANG_DICTS.en = EN (βλ. παρακάτω) — κάθε νέα γλώσσα = ένα νέο λεξικό
 const LANGS=[{id:"el",name:"Ελληνικά",flag:"gr"},{id:"en",name:"English",flag:"gb"},{id:"de",name:"Deutsch",flag:"de"},{id:"fr",name:"Français",flag:"fr"},{id:"it",name:"Italiano",flag:"it"},{id:"es",name:"Español",flag:"es"},{id:"ru",name:"Русский",flag:"ru"}];
 const CURRENCIES=[
@@ -764,6 +764,126 @@ function NoteEntryRow({e,i,total,T,onEdit,onDel}){
   );
 }
 
+function Welcome({T,col,lang,setLang,onDone}){
+  const [i,setI]=useState(0);
+  const sx=useRef(null);
+  const N=3,last=i===N-1;
+  const go=n=>setI(Math.min(N-1,Math.max(0,n)));
+  const feats=[
+    ["⛽","Γεμίσματα & κατανάλωση","Αυτόματος υπολογισμός λίτρων και κατανάλωσης","#3b82f6"],
+    ["📋","Όλα τα έξοδα","Διόδια, service, ασφάλεια, ελαστικά και άλλα","#e11d48"],
+    ["🔔","Υπενθυμίσεις","ΚΤΕΟ, ασφάλεια, service, δίπλωμα","#ffd60a"],
+    ["📊","Στατιστικά","Γραφήματα, ημερολόγιο και ανασκόπηση χρονιάς","#10b981"],
+  ];
+  const rows=[
+    ["📴","Λειτουργεί και χωρίς internet"],
+    ["🛟","Κάνε αντίγραφο ασφαλείας από το κουμπί 💾 πάνω δεξιά"],
+    ["🔀","Φέρε τα δεδομένα σου σε άλλη συσκευή με συγχώνευση"],
+  ];
+  const anim=(idx,css)=>i===idx?css:"none";
+  const chips=[["🛣️",4,6,0],["🔧",null,10,.6,4],["💶",8,null,1.1],["⚡",null,null,1.7]];
+  const chipPos=[{top:6,left:2},{top:20,right:0},{bottom:20,left:0},{bottom:4,right:14}];
+  return(
+    <div style={{position:"fixed",inset:0,zIndex:500,display:"flex",flexDirection:"column",color:T.tx,fontFamily:"sans-serif",
+      background:`radial-gradient(circle at 50% -5%, ${col}40, transparent 55%), radial-gradient(circle at 100% 100%, ${col}1f, transparent 50%), ${T.bg}`}}
+      onTouchStart={e=>{sx.current=e.touches[0].clientX;}}
+      onTouchEnd={e=>{if(sx.current===null)return;const dx=sx.current-e.changedTouches[0].clientX;if(dx>50)go(i+1);else if(dx<-50)go(i-1);sx.current=null;}}>
+      <style>{`
+        @keyframes flSweep{from{stroke-dashoffset:100}to{stroke-dashoffset:28}}
+        @keyframes flUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+        @keyframes flFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        @keyframes flPulse{0%{transform:scale(.85);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+        @keyframes flPop{0%{transform:scale(.6);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+        @media (prefers-reduced-motion:reduce){.fl-wel *{animation:none!important}}
+      `}</style>
+
+      <div style={{display:"flex",justifyContent:"flex-end",padding:"max(14px, env(safe-area-inset-top)) 16px 0",minHeight:44}}>
+        {!last&&<button onClick={onDone} style={{border:"none",background:"none",color:T.mt,fontSize:fz(13),fontWeight:"bold",cursor:"pointer",padding:"8px 6px"}}>{t("Παράλειψη")}</button>}
+      </div>
+
+      <div className="fl-wel" style={{flex:1,overflow:"hidden"}}>
+        <div style={{display:"flex",height:"100%",width:`${N*100}%`,transform:`translateX(-${i*100/N}%)`,transition:"transform .45s cubic-bezier(.4,.1,.2,1)"}}>
+
+          {/* ── Slide 1 · Καλωσόρισμα ── */}
+          <div aria-hidden={i!==0} style={{width:`${100/N}%`,overflowY:"auto",padding:"4px 24px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",boxSizing:"border-box"}}>
+            <div style={{position:"relative",width:230,height:230,marginBottom:18}}>
+              <svg viewBox="0 0 180 180" width="230" height="230" style={{filter:`drop-shadow(0 0 18px ${col}66)`}}>
+                <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={T.br} strokeWidth="12" strokeLinecap="round"/>
+                <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={col} strokeWidth="12" strokeLinecap="round" pathLength="100"
+                  style={{strokeDasharray:100,strokeDashoffset:i===0?28:100,animation:anim(0,"flSweep 1.6s .25s cubic-bezier(.3,.1,.2,1) both")}}/>
+                <text x="90" y="104" textAnchor="middle" fontSize="54">⛽</text>
+                <text x="90" y="132" textAnchor="middle" fontSize="11" fontWeight="bold" fill={T.mt} letterSpacing="1.5">FUELLOG</text>
+              </svg>
+              {chips.map(([ic],k)=>(
+                <span key={k} style={{position:"absolute",...chipPos[k],width:40,height:40,borderRadius:"50%",background:T.sf,border:`1px solid ${T.br}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,boxShadow:`0 4px 14px ${col}33`,
+                  animation:anim(0,`flFloat ${3+k*.4}s ${k*.5}s ease-in-out infinite`)}}>{ic}</span>
+              ))}
+            </div>
+            <h1 style={{margin:"0 0 10px",fontSize:fz(27),lineHeight:1.2,animation:anim(0,"flUp .6s .1s both")}}>{t("Καλώς ήρθες στο FuelLog")}</h1>
+            <p style={{margin:"0 0 22px",fontSize:fz(15),lineHeight:1.55,color:T.mt,maxWidth:320,animation:anim(0,"flUp .6s .25s both")}}>{t("Τα καύσιμα και τα έξοδα του αυτοκινήτου σου, απλά και σε ένα μέρος.")}</p>
+            <div style={{display:"flex",flexWrap:"wrap",justifyContent:"center",gap:10,maxWidth:300,animation:anim(0,"flUp .6s .4s both")}}>
+              {LANGS.map(l=>{
+                const on=lang===l.id;
+                return(
+                  <button key={l.id} type="button" aria-label={l.name} title={l.name} onClick={()=>setLang(l.id)}
+                    style={{padding:6,borderRadius:12,cursor:"pointer",background:on?`${col}33`:"transparent",border:`2px solid ${on?col:"transparent"}`,opacity:on?1:0.6,transform:on?"scale(1.12)":"none",transition:"all .2s"}}>
+                    <Flag id={l.flag} w={34}/>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── Slide 2 · Τι κάνει ── */}
+          <div aria-hidden={i!==1} style={{width:`${100/N}%`,overflowY:"auto",padding:"4px 20px 16px",display:"flex",flexDirection:"column",justifyContent:"center",boxSizing:"border-box"}}>
+            <h2 style={{margin:"0 0 18px",fontSize:fz(23),textAlign:"center",animation:anim(1,"flUp .5s both")}}>{t("Όλα για το αυτοκίνητό σου")}</h2>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+              {feats.map(([ic,ti,de,c],k)=>(
+                <div key={ti} style={{background:T.sf,border:`1px solid ${T.br}`,borderTop:`3px solid ${c}`,borderRadius:16,padding:"14px 12px",animation:anim(1,`flUp .55s ${.12+k*.12}s both`)}}>
+                  <div style={{width:44,height:44,borderRadius:12,background:`${c}22`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:fz(24),marginBottom:8}}>{ic}</div>
+                  <div style={{fontSize:fz(13),fontWeight:"bold",marginBottom:4}}>{t(ti)}</div>
+                  <div style={{fontSize:fz(11),color:T.mt,lineHeight:1.45}}>{t(de)}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{textAlign:"center",fontSize:fz(12),color:T.mt,animation:anim(1,"flUp .55s .65s both")}}>{t("🚗 Πολλά οχήματα · ⚡ Και ηλεκτρικά ή υβριδικά")}</div>
+          </div>
+
+          {/* ── Slide 3 · Τα δεδομένα σου ── */}
+          <div aria-hidden={i!==2} style={{width:`${100/N}%`,overflowY:"auto",padding:"4px 22px 16px",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",boxSizing:"border-box"}}>
+            <div style={{position:"relative",width:110,height:110,marginBottom:20}}>
+              <span style={{position:"absolute",inset:0,borderRadius:"50%",border:`2px solid ${col}`,animation:anim(2,"flPulse 2.2s ease-out infinite")}}/>
+              <span style={{position:"absolute",inset:0,borderRadius:"50%",border:`2px solid ${col}`,animation:anim(2,"flPulse 2.2s 1.1s ease-out infinite")}}/>
+              <div style={{position:"absolute",inset:8,borderRadius:"50%",background:T.sf,border:`2px solid ${col}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:44,animation:anim(2,"flPop .6s .1s both")}}>🔒</div>
+            </div>
+            <h2 style={{margin:"0 0 8px",fontSize:fz(23),animation:anim(2,"flUp .5s .1s both")}}>{t("Τα δεδομένα σου μένουν δικά σου")}</h2>
+            <p style={{margin:"0 0 18px",fontSize:fz(14),lineHeight:1.55,color:T.mt,maxWidth:320,animation:anim(2,"flUp .5s .2s both")}}>{t("Αποθηκεύονται μόνο σε αυτή τη συσκευή. Δεν χρειάζεται λογαριασμός.")}</p>
+            <div style={{width:"100%",maxWidth:340,background:T.sf,border:`1px solid ${T.br}`,borderRadius:16,padding:"6px 14px",marginBottom:14,textAlign:"left"}}>
+              {rows.map(([ic,tx],k)=>(
+                <div key={tx} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:k<rows.length-1?`1px solid ${T.ft}`:"none",animation:anim(2,`flUp .5s ${.3+k*.12}s both`)}}>
+                  <span style={{fontSize:fz(22)}}>{ic}</span>
+                  <span style={{fontSize:fz(13),lineHeight:1.4}}>{t(tx)}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{width:"100%",maxWidth:340,fontSize:fz(12),color:T.mt,lineHeight:1.5,border:`1px dashed ${col}`,borderRadius:12,padding:"10px 12px",animation:anim(2,"flUp .5s .7s both")}}>{t("Τη γλώσσα και το νόμισμα τα αλλάζεις όποτε θες από το ℹ️ Σχετικά και ρυθμίσεις.")}</div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{padding:"8px 20px max(20px, env(safe-area-inset-bottom))"}}>
+        <div style={{display:"flex",justifyContent:"center",gap:8,marginBottom:14}}>
+          {[0,1,2].map(k=><button key={k} type="button" aria-label={String(k+1)} onClick={()=>go(k)} style={{width:i===k?26:9,height:9,borderRadius:5,border:"none",padding:0,cursor:"pointer",background:i===k?col:T.br,transition:"all .3s"}}/>)}
+        </div>
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={()=>go(i-1)} style={{flex:"0 0 30%",padding:14,background:T.br,color:T.tx,border:"none",borderRadius:12,fontWeight:"bold",fontSize:fz(14),cursor:"pointer",visibility:i===0?"hidden":"visible"}}>{t("Πίσω")}</button>
+          <button onClick={()=>last?onDone():go(i+1)} style={{flex:1,padding:14,background:col,color:"#fff",border:"none",borderRadius:12,fontWeight:"bold",fontSize:fz(15),cursor:"pointer",boxShadow:`0 6px 20px ${col}55`}}>{last?t("Ξεκινάμε!")+" 🚀":t("Επόμενο")+" →"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ========== MAIN APP ==========
 export default function FuelLog(){
   const [dark,setDark]=useState(()=>readPrefs().dark);
@@ -781,7 +901,7 @@ export default function FuelLog(){
   const [notes,setNotes]=useState({});
   const [noteEdit,setNoteEdit]=useState(null);
   const [confirmDel,setConfirmDel]=useState(null);
-  const [setupMode,setSetupMode]=useState(false);
+  const [setupMode,setSetupMode]=useState(false);const [showWelcome,setShowWelcome]=useState(false);
   const [doneRem,setDoneRem]=useState(null);
   const [gaugeDet,setGaugeDet]=useState(null);   // null | "cons" | "ppl" | "eppl"
   const askDel=(title,detail,fn)=>setConfirmDel({title,detail,fn});
@@ -888,7 +1008,7 @@ export default function FuelLog(){
     }catch(e){
       try{if(raw)localStorage.setItem("fuellog_corrupt_backup",raw);}catch(e2){}
     }
-    if(first){setSetupMode(true);setNewV(defV({name:"",units:{...UNIT_PRESETS[defUnits]}}));setShowAddV(true);}
+    if(first){setSetupMode(true);setShowWelcome(true);setNewV(defV({name:"",units:{...UNIT_PRESETS[defUnits]}}));setShowAddV(true);}
   },[]);
 
   useEffect(()=>{
@@ -2111,6 +2231,8 @@ export default function FuelLog(){
           </div>
           <div style={{fontSize:fz(10),color:T.mt,marginTop:4}}>{t("Οι μονάδες κάθε οχήματος αλλάζουν από την επεξεργασία του (✏️).")}</div>
         </div>
+        <div style={{...CS({marginBottom:12}),fontSize:fz(12),color:T.mt,lineHeight:1.6}}>{t("💾 Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κάνε τακτικά αντίγραφο ασφαλείας από το κουμπί 💾 πάνω.")}</div>
+<button onClick={()=>{setShowAbout(false);setShowWelcome(true);}} style={{...chipStyle(false),marginBottom:18}}>{t("👋 Δες ξανά την υποδοχή")}</button>
         <div style={{textAlign:"center",padding:"10px 0 20px"}}>
           <div style={{fontSize:fz(48),marginBottom:8}}>⛽</div>
           <div style={{fontSize:fz(22),fontWeight:"bold",marginBottom:4}}>FuelLog</div>
@@ -2160,6 +2282,8 @@ export default function FuelLog(){
         )}
       </Modal>
 
+{showWelcome&&<Welcome T={T} col={col} lang={lang} setLang={setLang} onDone={()=>setShowWelcome(false)}/>}
+      
     </div>
   );
 }
@@ -2545,5 +2669,29 @@ const I18N_ROWS=[
   ["✅ Προστέθηκαν στο «{0}»: {1} γεμίσματα.", "✅ Added to “{0}”: {1} fill-ups.", "✅ Zu „{0}“ hinzugefügt: {1} Tankfüllungen.", "✅ Ajouté à « {0} » : {1} pleins.", "✅ Aggiunti a «{0}»: {1} rifornimenti.", "✅ Añadido a «{0}»: {1} repostajes.", "✅ Добавлено в «{0}»: заправок — {1}."],
   ["🔀 Η συγχώνευση κρατά ό,τι υπάρχει, προσθέτει ό,τι λείπει και προσπερνά τις διπλοεγγραφές (ίδια ημερομηνία, είδος, ποσό). Η αντικατάσταση σβήνει τα τωρινά δεδομένα.", "🔀 Merge keeps what you have, adds what is missing and skips duplicates (same date, type, amount). Replace erases your current data.", "🔀 Zusammenführen behält Vorhandenes, ergänzt Fehlendes und überspringt Duplikate (gleiches Datum, gleiche Art, gleicher Betrag). Ersetzen löscht die aktuellen Daten.", "🔀 La fusion conserve l'existant, ajoute ce qui manque et ignore les doublons (même date, type, montant). Le remplacement efface les données actuelles.", "🔀 L'unione mantiene ciò che hai, aggiunge ciò che manca e ignora i duplicati (stessa data, tipo, importo). La sostituzione cancella i dati attuali.", "🔀 Combinar conserva lo que tienes, añade lo que falta y omite duplicados (misma fecha, tipo e importe). Reemplazar borra los datos actuales.", "🔀 Объединение сохраняет имеющееся, добавляет недостающее и пропускает дубликаты (та же дата, тип, сумма). Замена стирает текущие данные."],
   ["🔀 Συγχώνευση αντιγράφων & έλεγχος διπλοεγγραφών στην εισαγωγή", "🔀 Backup merging & duplicate check on import", "🔀 Sicherungen zusammenführen & Duplikatprüfung beim Import", "🔀 Fusion des sauvegardes et contrôle des doublons à l'importation", "🔀 Unione dei backup e controllo dei duplicati all'importazione", "🔀 Combinación de copias y control de duplicados al importar", "🔀 Объединение копий и проверка дубликатов при импорте"],
+  // ---- v2.21: οθόνη υποδοχής ----
+  ["Καλώς ήρθες στο FuelLog", "Welcome to FuelLog", "Willkommen bei FuelLog", "Bienvenue dans FuelLog", "Benvenuto in FuelLog", "Te damos la bienvenida a FuelLog", "Добро пожаловать в FuelLog"],
+  ["Τα καύσιμα και τα έξοδα του αυτοκινήτου σου, απλά και σε ένα μέρος.", "Your car's fuel and expenses, simple and in one place.", "Kraftstoff und Kosten deines Autos – einfach und an einem Ort.", "Le carburant et les dépenses de votre voiture, simplement et au même endroit.", "Carburante e spese della tua auto, in modo semplice e in un unico posto.", "El combustible y los gastos de tu coche, de forma sencilla y en un solo lugar.", "Топливо и расходы на автомобиль — просто и в одном месте."],
+  ["Επόμενο", "Next", "Weiter", "Suivant", "Avanti", "Siguiente", "Далее"],
+  ["Πίσω", "Back", "Zurück", "Retour", "Indietro", "Atrás", "Назад"],
+  ["Παράλειψη", "Skip", "Überspringen", "Passer", "Salta", "Omitir", "Пропустить"],
+  ["Ξεκινάμε!", "Let's go!", "Los geht's!", "C'est parti !", "Iniziamo!", "¡Empezamos!", "Начнём!"],
+  ["Όλα για το αυτοκίνητό σου", "Everything for your car", "Alles für dein Auto", "Tout pour votre voiture", "Tutto per la tua auto", "Todo para tu coche", "Всё для вашего автомобиля"],
+  ["Γεμίσματα & κατανάλωση", "Fill-ups & consumption", "Tankfüllungen & Verbrauch", "Pleins & consommation", "Rifornimenti e consumi", "Repostajes y consumo", "Заправки и расход"],
+  ["Αυτόματος υπολογισμός λίτρων και κατανάλωσης", "Automatic volume and consumption calculation", "Automatische Berechnung von Menge und Verbrauch", "Calcul automatique du volume et de la consommation", "Calcolo automatico di volume e consumi", "Cálculo automático de volumen y consumo", "Автоматический расчёт объёма и расхода"],
+  ["Όλα τα έξοδα", "All expenses", "Alle Kosten", "Toutes les dépenses", "Tutte le spese", "Todos los gastos", "Все расходы"],
+  ["Διόδια, service, ασφάλεια, ελαστικά και άλλα", "Tolls, service, insurance, tyres and more", "Maut, Service, Versicherung, Reifen und mehr", "Péages, entretien, assurance, pneus et plus", "Pedaggi, tagliando, assicurazione, pneumatici e altro", "Peajes, revisión, seguro, neumáticos y más", "Платные дороги, ТО, страховка, шины и не только"],
+  ["Υπενθυμίσεις", "Reminders", "Erinnerungen", "Rappels", "Promemoria", "Recordatorios", "Напоминания"],
+  ["ΚΤΕΟ, ασφάλεια, service, δίπλωμα", "Inspection, insurance, service, licence", "HU, Versicherung, Service, Führerschein", "Contrôle technique, assurance, entretien, permis", "Revisione, assicurazione, tagliando, patente", "ITV, seguro, revisión, carnet", "Техосмотр, страховка, ТО, права"],
+  ["Γραφήματα, ημερολόγιο και ανασκόπηση χρονιάς", "Charts, calendar and yearly review", "Diagramme, Kalender und Jahresrückblick", "Graphiques, calendrier et bilan annuel", "Grafici, calendario e riepilogo annuale", "Gráficos, calendario y resumen anual", "Графики, календарь и итоги года"],
+  ["🚗 Πολλά οχήματα · ⚡ Και ηλεκτρικά ή υβριδικά", "🚗 Multiple vehicles · ⚡ Electric and hybrid too", "🚗 Mehrere Fahrzeuge · ⚡ Auch Elektro und Hybrid", "🚗 Plusieurs véhicules · ⚡ Aussi électriques et hybrides", "🚗 Più veicoli · ⚡ Anche elettriche e ibride", "🚗 Varios vehículos · ⚡ También eléctricos e híbridos", "🚗 Несколько авто · ⚡ Есть электро и гибриды"],
+  ["Τα δεδομένα σου μένουν δικά σου", "Your data stays yours", "Deine Daten bleiben bei dir", "Vos données restent les vôtres", "I tuoi dati restano tuoi", "Tus datos siguen siendo tuyos", "Ваши данные остаются вашими"],
+  ["Αποθηκεύονται μόνο σε αυτή τη συσκευή. Δεν χρειάζεται λογαριασμός.", "They are stored only on this device. No account needed.", "Sie werden nur auf diesem Gerät gespeichert. Kein Konto nötig.", "Elles sont enregistrées uniquement sur cet appareil. Aucun compte requis.", "Vengono salvati solo su questo dispositivo. Nessun account necessario.", "Se guardan solo en este dispositivo. No necesitas cuenta.", "Они хранятся только на этом устройстве. Аккаунт не нужен."],
+  ["Λειτουργεί και χωρίς internet", "Works without internet too", "Funktioniert auch ohne Internet", "Fonctionne aussi sans internet", "Funziona anche senza internet", "Funciona también sin internet", "Работает и без интернета"],
+  ["Κάνε αντίγραφο ασφαλείας από το κουμπί 💾 πάνω δεξιά", "Back up with the 💾 button at the top right", "Erstelle eine Sicherung mit der 💾-Taste oben rechts", "Faites une sauvegarde avec le bouton 💾 en haut à droite", "Fai un backup con il pulsante 💾 in alto a destra", "Haz una copia con el botón 💾 de arriba a la derecha", "Делайте резервную копию кнопкой 💾 вверху справа"],
+  ["Φέρε τα δεδομένα σου σε άλλη συσκευή με συγχώνευση", "Move your data to another device with merge", "Übertrage deine Daten per Zusammenführen auf ein anderes Gerät", "Transférez vos données vers un autre appareil grâce à la fusion", "Sposta i dati su un altro dispositivo con l'unione", "Lleva tus datos a otro dispositivo con la combinación", "Перенесите данные на другое устройство через объединение"],
+  ["Τη γλώσσα και το νόμισμα τα αλλάζεις όποτε θες από το ℹ️ Σχετικά και ρυθμίσεις.", "You can change language and currency anytime in ℹ️ About & settings.", "Sprache und Währung kannst du jederzeit unter ℹ️ Info & Einstellungen ändern.", "Vous pouvez changer la langue et la devise à tout moment dans ℹ️ À propos et réglages.", "Puoi cambiare lingua e valuta quando vuoi da ℹ️ Info e impostazioni.", "Puedes cambiar el idioma y la moneda cuando quieras en ℹ️ Acerca de y ajustes.", "Язык и валюту можно изменить в любой момент в ℹ️ О приложении и настройки."],
+  ["💾 Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κάνε τακτικά αντίγραφο ασφαλείας από το κουμπί 💾 πάνω.", "💾 Your data is stored only on this device. Back up regularly with the 💾 button at the top.", "💾 Deine Daten werden nur auf diesem Gerät gespeichert. Erstelle regelmäßig eine Sicherung mit der 💾-Taste oben.", "💾 Vos données sont enregistrées uniquement sur cet appareil. Faites régulièrement une sauvegarde avec le bouton 💾 en haut.", "💾 I dati sono salvati solo su questo dispositivo. Fai backup regolari con il pulsante 💾 in alto.", "💾 Tus datos se guardan solo en este dispositivo. Haz copias con regularidad con el botón 💾 de arriba.", "💾 Данные хранятся только на этом устройстве. Регулярно делайте копию кнопкой 💾 вверху."],
+  ["👋 Δες ξανά την υποδοχή", "👋 View the welcome again", "👋 Willkommen erneut ansehen", "👋 Revoir l'accueil", "👋 Rivedi il benvenuto", "👋 Ver la bienvenida otra vez", "👋 Показать приветствие снова"],
 ];
 ["en","de","fr","it","es","ru"].forEach((l,i)=>{LANG_DICTS[l]=Object.create(null);I18N_ROWS.forEach(r=>{LANG_DICTS[l][r[0]]=r[i+1];});});
