@@ -781,7 +781,7 @@ function Welcome({T,col,lang,setLang,onDone}){
     ["🔀","Φέρε τα δεδομένα σου σε άλλη συσκευή με συγχώνευση"],
   ];
   const anim=(idx,css)=>i===idx?css:"none";
-  const chips=[["🛣️",4,6,0],["🔧",null,10,.6,4],["💶",8,null,1.1],["⚡",null,null,1.7]];
+  const chips=[["🛣️"],["🔧"],["💶"],["⚡"]];
   const chipPos=[{top:6,left:2},{top:20,right:0},{bottom:20,left:0},{bottom:4,right:14}];
   return(
     <div style={{position:"fixed",inset:0,zIndex:500,display:"flex",flexDirection:"column",color:T.tx,fontFamily:"sans-serif",
@@ -811,7 +811,7 @@ function Welcome({T,col,lang,setLang,onDone}){
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={T.br} strokeWidth="12" strokeLinecap="round"/>
                 <path d="M 40.5 139.5 A 70 70 0 1 1 139.5 139.5" fill="none" stroke={col} strokeWidth="12" strokeLinecap="round" pathLength="100"
                   style={{strokeDasharray:100,strokeDashoffset:i===0?28:100,animation:anim(0,"flSweep 1.6s .25s cubic-bezier(.3,.1,.2,1) both")}}/>
-                <text x="90" y="104" textAnchor="middle" fontSize="54">⛽</text>
+                <text x="90" y="106" textAnchor="middle" dominantBaseline="central" fontSize="58" fontWeight="900" fill={col}>{CURSYM}</text>
                 <text x="90" y="132" textAnchor="middle" fontSize="11" fontWeight="bold" fill={T.mt} letterSpacing="1.5">FUELLOG</text>
               </svg>
               {chips.map(([ic],k)=>(
@@ -867,6 +867,7 @@ function Welcome({T,col,lang,setLang,onDone}){
               ))}
             </div>
             <div style={{width:"100%",maxWidth:340,fontSize:fz(12),color:T.mt,lineHeight:1.5,border:`1px dashed ${col}`,borderRadius:12,padding:"10px 12px",animation:anim(2,"flUp .5s .7s both")}}>{t("Τη γλώσσα και το νόμισμα τα αλλάζεις όποτε θες από το ℹ️ Σχετικά και ρυθμίσεις.")}</div>
+            <div style={{marginTop:14,fontSize:fz(11),color:T.mt,animation:anim(2,"flUp .5s .85s both")}}>© 2026 · {t("Ταχμαζίδης Κ. Γιώργος")}</div> 
           </div>
         </div>
       </div>
@@ -883,7 +884,15 @@ function Welcome({T,col,lang,setLang,onDone}){
     </div>
   );
 }
-
+function Logo({col,size=30}){
+  const f=CURSYM.length>2?10:CURSYM.length>1?14:19;
+  return(
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" style={{flexShrink:0}}>
+      <path d="M 10.6 37.4 A 19 19 0 1 1 37.4 37.4" fill="none" stroke={col} strokeWidth="4.5" strokeLinecap="round"/>
+      <text x="24" y="24" textAnchor="middle" dominantBaseline="central" fontSize={f} fontWeight="900" fill={col} fontFamily="Arial,sans-serif">{CURSYM}</text>
+    </svg>
+  );
+}
 // ========== MAIN APP ==========
 export default function FuelLog(){
   const [dark,setDark]=useState(()=>readPrefs().dark);
@@ -1462,8 +1471,10 @@ export default function FuelLog(){
       {/* Header */}
       <header style={{flexWrap:"wrap",gap:6,padding:"10px 15px",background:T.sf,borderBottom:`1px solid ${T.br}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <span style={{fontSize:fz(22)}}>⛽</span>
-          <span style={{fontWeight:"bold",fontSize:fz(17)}}>FuelLog v{APP_VER}</span>
+          <Logo col={col} size={32}/>
+          <span style={{fontWeight:"bold",fontSize:fz(17)}}>Fuel<span style={{color:col}}>Log</span>
+          <span style={{fontSize:fz(11),color:T.mt,fontWeight:"normal"}}>v{APP_VER}</span></span>
+      
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center"}}>
           <button onClick={()=>setShowVInfo(true)} style={{border:`1px solid ${T.br}`,background:T.br,color:T.mt,borderRadius:8,padding:"5px 8px",fontSize:fz(14),cursor:"pointer"}} title={t("Αρχείο αυτοκινήτου")}>🗂️</button>
@@ -2243,6 +2254,7 @@ export default function FuelLog(){
             <div style={{fontSize:fz(12),color:T.mt,marginBottom:4}}>{t("Σχεδίαση & Ανάπτυξη")}</div>
             <div style={{fontSize:fz(18),fontWeight:"bold",color:col}}>{t("Ταχμαζίδης Κ. Γιώργος")}</div>
             <div style={{fontSize:fz(12),color:T.mt,marginTop:4}}>{t("© 2026 · Όλα τα δικαιώματα διατηρούνται")}</div>
+            <div style={{fontSize:fz(13),marginTop:10}}>{t("Επικοινωνία")}: <a href={`mailto:fuellog.info@gmail.com?subject=FuelLog%20v${APP_VER}`} style={{color:col,fontWeight:"bold",textDecoration:"none"}}>fuellog.info@gmail.com</a></div>
           </div>
         </div>
       </Modal>
@@ -2693,5 +2705,6 @@ const I18N_ROWS=[
   ["Τη γλώσσα και το νόμισμα τα αλλάζεις όποτε θες από το ℹ️ Σχετικά και ρυθμίσεις.", "You can change language and currency anytime in ℹ️ About & settings.", "Sprache und Währung kannst du jederzeit unter ℹ️ Info & Einstellungen ändern.", "Vous pouvez changer la langue et la devise à tout moment dans ℹ️ À propos et réglages.", "Puoi cambiare lingua e valuta quando vuoi da ℹ️ Info e impostazioni.", "Puedes cambiar el idioma y la moneda cuando quieras en ℹ️ Acerca de y ajustes.", "Язык и валюту можно изменить в любой момент в ℹ️ О приложении и настройки."],
   ["💾 Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κάνε τακτικά αντίγραφο ασφαλείας από το κουμπί 💾 πάνω.", "💾 Your data is stored only on this device. Back up regularly with the 💾 button at the top.", "💾 Deine Daten werden nur auf diesem Gerät gespeichert. Erstelle regelmäßig eine Sicherung mit der 💾-Taste oben.", "💾 Vos données sont enregistrées uniquement sur cet appareil. Faites régulièrement une sauvegarde avec le bouton 💾 en haut.", "💾 I dati sono salvati solo su questo dispositivo. Fai backup regolari con il pulsante 💾 in alto.", "💾 Tus datos se guardan solo en este dispositivo. Haz copias con regularidad con el botón 💾 de arriba.", "💾 Данные хранятся только на этом устройстве. Регулярно делайте копию кнопкой 💾 вверху."],
   ["👋 Δες ξανά την υποδοχή", "👋 View the welcome again", "👋 Willkommen erneut ansehen", "👋 Revoir l'accueil", "👋 Rivedi il benvenuto", "👋 Ver la bienvenida otra vez", "👋 Показать приветствие снова"],
+  ["Ερωτήσεις ή προτάσεις;", "Questions or suggestions?", "Fragen oder Vorschläge?", "Des questions ou des suggestions ?", "Domande o suggerimenti?", "¿Preguntas o sugerencias?", "Вопросы или предложения?"],
 ];
 ["en","de","fr","it","es","ru"].forEach((l,i)=>{LANG_DICTS[l]=Object.create(null);I18N_ROWS.forEach(r=>{LANG_DICTS[l][r[0]]=r[i+1];});});
