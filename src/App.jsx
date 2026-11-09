@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 
 // ========== LANGUAGE & CURRENCY ==========
 let LANG="el",CURSYM="€";
-const APP_VER="2.21";
+const APP_VER="2.22";
 const LANG_DICTS={};            // LANG_DICTS.en = EN (βλ. παρακάτω) — κάθε νέα γλώσσα = ένα νέο λεξικό
 const LANGS=[{id:"el",name:"Ελληνικά",flag:"gr"},{id:"en",name:"English",flag:"gb"},{id:"de",name:"Deutsch",flag:"de"},{id:"fr",name:"Français",flag:"fr"},{id:"it",name:"Italiano",flag:"it"},{id:"es",name:"Español",flag:"es"},{id:"ru",name:"Русский",flag:"ru"}];
 const CURRENCIES=[
@@ -1360,7 +1360,7 @@ export default function FuelLog(){
       return`<tr><td>${formatDate(e.date)}</td><td>${esc(cat?t(cat.label):e.category)}</td><td>${esc(dispLabel(e,cat))}</td><td style="color:#c00;font-weight:bold">-${fmt(e.amount)}${sym}</td></tr>`;
     }).join("");
     const H=k=>esc(t(k));
-    const html=`<!DOCTYPE html><html lang="${LANG}"><head><meta charset="UTF-8"><title>FuelLog - ${esc(av.name)}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#111;padding:20px}.hdr{margin-bottom:14px;border-bottom:3px solid #f97316;padding-bottom:8px}.hdr h1{font-size:19px;color:#f97316}.hdr p{font-size:10px;color:#555;margin-top:4px}.totals{background:#f5f5f5;border-radius:6px;padding:8px 14px;display:flex;gap:24px;font-size:12px;margin-bottom:14px}.totals b{color:#f97316}h2{font-size:13px;margin:16px 0 7px;color:#1e1e30;border-left:4px solid #f97316;padding-left:8px}table{width:100%;border-collapse:collapse;margin-bottom:14px}thead tr{background:#1e1e30;color:#fff}th{padding:6px 8px;text-align:left;font-size:10px}td{padding:5px 8px;border-bottom:1px solid #eee}tr:nth-child(even) td{background:#f8f8fc}.footer{margin-top:18px;font-size:9px;color:#aaa;border-top:1px solid #eee;padding-top:8px}@media print{body{padding:8px}}</style></head><body><div class="hdr"><h1>⛽ FuelLog — ${esc(av.name)}${av.info&&av.info.plate?" ("+esc(av.info.plate)+")":""}</h1><p>${H("Εξαγωγή")}: ${today()} &nbsp;|&nbsp; ${H("Γεμίσματα")}: ${allFuel.length} &nbsp;|&nbsp; ${H("Σύνολο")}: ${fmt(totalFuel+totalExp)}${sym}</p></div><div class="totals"><div>${H("Καύσιμα")}: <b>${fmt(totalFuel)}${sym}</b></div><div>${H("Άλλα έξοδα")}: <b>${fmt(totalExp)}${sym}</b></div><div>${H("Σύνολο")}: <b>${fmt(totalFuel+totalExp)}${sym}</b></div></div><h2>⛽ ${H("Γεμίσματα Καυσίμου")}</h2><table><thead><tr><th>${H("Ημερομηνία")}</th><th>${H("Τύπος")}</th><th>${H("Λίτρα/kWh")}</th><th>${H("€/μον.")}</th><th>${H("Σύνολο")}</th><th>ODO (${esc(dl)})</th><th>${esc(cl)}</th><th>${H("Σημειώσεις")}</th></tr></thead><tbody>${fuelRows}</tbody></table>${allExp.length>0?"<h2>📋 "+H("Λοιπά Έξοδα")+"</h2><table><thead><tr><th>"+H("Ημερομηνία")+"</th><th>"+H("Κατηγορία")+"</th><th>"+H("Περιγραφή")+"</th><th>"+H("Ποσό")+"</th></tr></thead><tbody>"+expRows+"</tbody></table>":""}<div class="footer">${H("Δημιουργήθηκε από")} FuelLog v${APP_VER} — Ταχμαζίδης Κ. Γιώργος</div><script>window.onload=function(){window.print();};<\/script></body></html>`;
+    const html=`<!DOCTYPE html><html lang="${LANG}"><head><meta charset="UTF-8"><title>FuelLog - ${esc(av.name)}</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#111;padding:20px}.hdr{margin-bottom:14px;border-bottom:3px solid #f97316;padding-bottom:8px}.hdr h1{font-size:19px;color:#f97316}.hdr p{font-size:10px;color:#555;margin-top:4px}.totals{background:#f5f5f5;border-radius:6px;padding:8px 14px;display:flex;gap:24px;font-size:12px;margin-bottom:14px}.totals b{color:#f97316}h2{font-size:13px;margin:16px 0 7px;color:#1e1e30;border-left:4px solid #f97316;padding-left:8px}table{width:100%;border-collapse:collapse;margin-bottom:14px}thead tr{background:#1e1e30;color:#fff}th{padding:6px 8px;text-align:left;font-size:10px}td{padding:5px 8px;border-bottom:1px solid #eee}tr:nth-child(even) td{background:#f8f8fc}.footer{margin-top:18px;font-size:9px;color:#aaa;border-top:1px solid #eee;padding-top:8px}@media print{body{padding:8px}}</style></head><body><div class="hdr"><h1>⛽ FuelLog — ${esc(av.name)}${av.info&&av.info.plate?" ("+esc(av.info.plate)+")":""}</h1><p>${H("Εξαγωγή")}: ${today()} &nbsp;|&nbsp; ${H("Γεμίσματα")}: ${allFuel.length} &nbsp;|&nbsp; ${H("Σύνολο")}: ${fmt(totalFuel+totalExp)}${sym}</p></div><div class="totals"><div>${H("Καύσιμα")}: <b>${fmt(totalFuel)}${sym}</b></div><div>${H("Άλλα έξοδα")}: <b>${fmt(totalExp)}${sym}</b></div><div>${H("Σύνολο")}: <b>${fmt(totalFuel+totalExp)}${sym}</b></div></div><h2>⛽ ${H("Γεμίσματα Καυσίμου")}</h2><table><thead><tr><th>${H("Ημερομηνία")}</th><th>${H("Τύπος")}</th><th>${H("Λίτρα/kWh")}</th><th>${H("€/μον.")}</th><th>${H("Σύνολο")}</th><th>ODO (${esc(dl)})</th><th>${esc(cl)}</th><th>${H("Σημειώσεις")}</th></tr></thead><tbody>${fuelRows}</tbody></table>${allExp.length>0?"<h2>📋 "+H("Λοιπά Έξοδα")+"</h2><table><thead><tr><th>"+H("Ημερομηνία")+"</th><th>"+H("Κατηγορία")+"</th><th>"+H("Περιγραφή")+"</th><th>"+H("Ποσό")+"</th></tr></thead><tbody>"+expRows+"</tbody></table>":""}<div class="footer">${H("Δημιουργήθηκε από")} FuelLog v$<span style={{color: T.txt, fontWeight: "800"}}>{APP_VER}</span> — Ταχμαζίδης Κ. Γιώργος</div><script>window.onload=function(){window.print();};<\/script></body></html>`;
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
     const win=window.open(url,"_blank");
@@ -1483,7 +1483,7 @@ export default function FuelLog(){
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <Logo col={col} bg={T.sf} size={34}/>
           <span style={{fontWeight:"bold",fontSize:fz(17)}}>Fuel<span style={{color:col}}>Log</span>
-          <span style={{fontSize:fz(11),color:T.mt,fontWeight:"normal"}}>v{APP_VER}</span></span>
+          <span style={{fontSize:fz(11),color:T.mt,fontWeight:"normal"}}>v<span style={{color: T.txt, fontWeight: "800"}}>{APP_VER}</span></span></span>
       
         </div>
         <div style={{display:"flex",gap:6,alignItems:"center"}}>
@@ -2234,7 +2234,7 @@ export default function FuelLog(){
           <div style={{textAlign:"center",paddingBottom:18,marginBottom:18,borderBottom:`1px solid ${T.br}`}}>
   <div style={{display:"flex",justifyContent:"center",marginBottom:6}}><Logo col={col} bg={T.sf} size={64}/></div>
   <div style={{fontSize:fz(22),fontWeight:"bold"}}>Fuel<span style={{color:col}}>Log</span></div>
-  <div style={{fontSize:fz(13),color:col}}>v{APP_VER}</div>
+  <div style={{fontSize:fz(13),color:col}}>v<span style={{color: T.txt, fontWeight: "800"}}>{APP_VER}</span></div>
   </div>
           <div style={{fontSize:fz(11),color:T.mt,fontWeight:"bold",marginBottom:8}}>{t("ΜΕΓΕΘΟΣ ΓΡΑΜΜΑΤΩΝ")}</div>
           <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
@@ -2266,7 +2266,7 @@ export default function FuelLog(){
             <div style={{fontSize:fz(12),color:T.mt,marginBottom:4}}>{t("Σχεδίαση & Ανάπτυξη")}</div>
             <div style={{fontSize:fz(18),fontWeight:"bold",color:col}}>{t("Ταχμαζίδης Κ. Γιώργος")}</div>
             <div style={{fontSize:fz(12),color:T.mt,marginTop:4}}>{t("© 2026 · Όλα τα δικαιώματα διατηρούνται")}</div>
-            <div style={{fontSize:fz(13),marginTop:10}}>{t("Επικοινωνία")}: <a href={`mailto:fuellog.info@gmail.com?subject=FuelLog%20v${APP_VER}`} style={{color:col,fontWeight:"bold",textDecoration:"none"}}>fuellog.info@gmail.com</a></div>
+            <div style={{fontSize:fz(13),marginTop:10}}>{t("Επικοινωνία")}: <a href={`mailto:fuellog.info@gmail.com?subject=FuelLog%20v$<span style={{color: T.txt, fontWeight: "800"}}>{APP_VER}</span>`} style={{color:col,fontWeight:"bold",textDecoration:"none"}}>fuellog.info@gmail.com</a></div>
           </div>
         </div>
       </Modal>
